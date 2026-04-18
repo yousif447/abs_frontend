@@ -18,6 +18,7 @@ import {
   HiOutlineComputerDesktop,
   HiOutlineWrenchScrewdriver,
 } from "react-icons/hi2";
+import Image from "next/image";
 
 const certifications = [
   {
@@ -31,7 +32,7 @@ const certifications = [
   },
   {
     id: 2,
-    image: "/iso14001.jpg",
+    image: "/iso14001.png",
     // title: "ISO 14001:2015",
     subtitle: "Environmental Management System",
     description: "Implement an effective environmental management system to minimize your ecological footprint and comply with regulations.",
@@ -40,7 +41,7 @@ const certifications = [
   },
   {
     id: 3,
-    image: "/iso45001.jpg",
+    image: "/iso45001.png",
     // title: "ISO 45001:2018",
     subtitle: "Occupational Health and Safety Management System",
     description: "Create a safe and healthy workplace by identifying and managing occupational health and safety risks.",
@@ -49,7 +50,7 @@ const certifications = [
   },
   {
     id: 4,
-    image: "/iso22000.jpg",
+    image: "/iso22000.png",
     // title: "ISO 22000:2018",
     subtitle: "Food Safety Management System",
     description: "Ensure food safety across the entire supply chain with internationally recognized management systems.",
@@ -58,7 +59,7 @@ const certifications = [
   },
   {
     id: 5,
-    image: "/haccp.jpg",
+    image: "/haccp.png",
     // title: "ISO 27001:2022",
     subtitle: "Food Safety",
     description: "Protect your organization's information assets with a comprehensive information security management system.",
@@ -108,14 +109,14 @@ export default function OurServicesSection() {
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: i * 0.07 }}
               >
-                <div
+                {/* <div
                   className="service-card-icon"
                   style={{ background: `${cert.color}14`, color: cert.color }}
                 >
                   <Icon size={28} />
-                </div>
+                </div> */}
                 <div className="service-card-body">
-                  <h3 className="service-card-title">{cert.title}</h3>
+                  <Image src={cert.image} alt={cert.title} width={50} height={50} />
                   <p className="service-card-subtitle">{cert.subtitle}</p>
                   <p className="service-card-desc">{cert.description}</p>
                 </div>
