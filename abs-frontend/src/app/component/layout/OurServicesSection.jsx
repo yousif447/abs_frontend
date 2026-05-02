@@ -1,164 +1,125 @@
 "use client";
 
-import Container from "./Container";
-import Link from "next/link";
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
-import {
-  HiOutlineShieldCheck,
-  HiOutlineCog,
-  HiOutlineGlobeAlt,
-  HiOutlineClipboardDocumentCheck,
-  HiOutlineDocumentCheck,
-  HiOutlineBuildingOffice2,
-  HiOutlineBeaker,
-  HiOutlineTruck,
-  HiOutlineHeart,
-  HiOutlineLockClosed,
-  HiOutlineComputerDesktop,
-  HiOutlineWrenchScrewdriver,
-} from "react-icons/hi2";
-import Image from "next/image";
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import Container from './Container';
+import Section from './Section';
+import { motion } from 'framer-motion';
 
-const certifications = [
-  {
-    id: 1,
-    image: "/iso9001.jpg",
-    // title: "ISO 9001:2015",
-    subtitle: "Quality Management System",
-    description: "Establish a robust quality management system to consistently deliver products and services that meet customer expectations.",
-    icon: HiOutlineShieldCheck,
-    color: "#3776bd",
-  },
-  {
-    id: 2,
-    image: "/iso14001.png",
-    // title: "ISO 14001:2015",
-    subtitle: "Environmental Management System",
-    description: "Implement an effective environmental management system to minimize your ecological footprint and comply with regulations.",
-    icon: HiOutlineGlobeAlt,
-    color: "#22c55e",
-  },
-  {
-    id: 3,
-    image: "/iso45001.png",
-    // title: "ISO 45001:2018",
-    subtitle: "Occupational Health and Safety Management System",
-    description: "Create a safe and healthy workplace by identifying and managing occupational health and safety risks.",
-    icon: HiOutlineHeart,
-    color: "#ef4444",
-  },
-  {
-    id: 4,
-    image: "/iso22000.png",
-    // title: "ISO 22000:2018",
-    subtitle: "Food Safety Management System",
-    description: "Ensure food safety across the entire supply chain with internationally recognized management systems.",
-    icon: HiOutlineClipboardDocumentCheck,
-    color: "#f59e0b",
-  },
-  {
-    id: 5,
-    image: "/haccp.png",
-    // title: "ISO 27001:2022",
-    subtitle: "Food Safety",
-    description: "Protect your organization's information assets with a comprehensive information security management system.",
-    icon: HiOutlineLockClosed,
-    color: "#8b5cf6",
-  },
-];
+const cardVariants = {
+  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  visible: { opacity: 1, y: 0, scale: 1 },
+};
 
-export default function OurServicesSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const [showAll, setShowAll] = useState(false);
-
-  const displayed = showAll ? certifications : certifications.slice(0, 8);
+export default function OurServicesSection({ data, lang = 'en' }) {
+  const serviceSection = data.sections.find(section => section.type === "Services");
 
   return (
-    <section id="services" className="services-section" ref={ref}>
-      <Container>
-        {/* Header */}
+    /* services-section */
+    <Section className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8" id="services">
+      {/* <Container> */}
+
+        {/* section-header-center */}
         <motion.div
-          className="section-header"
+          className="text-center mb-14"
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <span className="section-label section-label-center">Our Services</span>
-          <h2 className="section-title section-title-center">
-            ISO Certification
-            <span className="section-title-accent"> Solutions</span>
+          {/* section-label */}
+          <span className={`${lang === "ar" ? "font-heading" : "font-display" }inline-block text-[0.8rem] font-bold tracking-[0.08em] uppercase text-[var(--primary-color)] bg-[rgba(55,118,189,0.08)] px-4 py-[0.35rem] rounded-full mb-4`}>
+            {lang === "ar" ? "خدماتنا" : "Our Services"}
+          </span>
+          {/* section-heading */}
+          <h2 className={`${lang === "ar" ? "font-heading" : "font-display"} mt-10 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold text-[#0f172a] leading-[1.2] mb-4`}>
+            <span className="text-[var(--primary-color)]">{serviceSection.header_title}</span>
           </h2>
-          <p className="section-subtitle">
-            We provide comprehensive ISO certification services across a wide range
-            of international standards. Our expert auditors guide you through every
-            step of the certification journey.
+          {/* section-subheading */}
+          <p className="text-[#64748b] text-[1.05rem] leading-[1.7] w-9/12 mx-auto">
+            {serviceSection.header_description}
           </p>
         </motion.div>
 
-        {/* Grid */}
-        <div className="services-grid">
-          {displayed.map((cert, i) => {
-            const Icon = cert.icon;
-            return (
-              <motion.div
-                key={cert.id}
-                className="service-card"
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.07 }}
-              >
-                {/* <div
-                  className="service-card-icon"
-                  style={{ background: `${cert.color}14`, color: cert.color }}
-                >
-                  <Icon size={28} />
-                </div> */}
-                <div className="service-card-body">
-                  <Image src={cert.image} alt={cert.title} width={50} height={50} />
-                  <p className="service-card-subtitle">{cert.subtitle}</p>
-                  <p className="service-card-desc">{cert.description}</p>
-                </div>
-                <div
-                  className="service-card-accent"
-                  style={{ background: cert.color }}
+        {/* services-grid */}
+        <div className="grid grid-cols-4 gap-7 max-lg:grid-cols-2 max-sm:grid-cols-1">
+          {serviceSection.content.items.map((item, index) => (
+            /* service-card */
+            <motion.div
+              key={item.id}
+              className="group bg-white rounded-[var(--radius-lg)] overflow-hidden border border-[#e2e8f0] flex flex-col transition-all duration-[350ms] hover:-translate-y-[6px] hover:shadow-[0_16px_48px_rgba(0,0,0,0.1)] hover:border-[var(--primary-color)]"
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
+            >
+              <div className="flex flex-col items-center gap-2 px-6 pt-8 pb-3 text-center">
+                {/* <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={120}
+                  height={120}
+                  style={{ objectFit: 'cover', borderRadius: 'var(--radius-xl)' }}
+                /> */}
+                <img
+                  src="/iso9001.jpg"
+                  alt={item.name}
+                  width={120}
+                  height={120}
+                  style={{ objectFit: 'cover' }}
                 />
-              </motion.div>
-            );
-          })}
+                <h3 className="font-display mt-3 text-[1.15rem] font-bold text-[#0f172a]">
+                  {item.name}
+                </h3>
+                <p className="text-[var(--primary-color)] text-[0.8rem] font-semibold uppercase tracking-[0.04em]">
+                  {item.category}
+                </p>
+                <p className="text-[#64748b] text-[0.85rem] leading-[1.6]">
+                  {item.description.replace(/<[^>]*>/g, "").slice(0,153)}
+                </p>
+              </div>
+
+              {/* service-card-footer */}
+              <div className="px-6 pb-6 text-center">
+                <Link
+                  href={`/${lang}/our-service/${item.slug}`}
+                  className="inline-flex items-center gap-[0.4rem] text-[var(--primary-color)] text-[0.85rem] font-semibold cursor-pointer transition-[gap] duration-[250ms] group-hover:gap-[0.65rem]">
+                  {lang === "ar" ? "تعرف على المزيد" : "Learn More"}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </Link>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* View more / less */}
+        {/* section-cta-center */}
         <motion.div
-          className="services-cta"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          className="text-center mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {!showAll ? (
-            <button
-              className="services-view-more-btn"
-              onClick={() => setShowAll(true)}
-            >
-              View More Certifications
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-          ) : (
-            <button
-              className="services-view-more-btn"
-              onClick={() => setShowAll(false)}
-            >
-              Show Less
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="18 15 12 9 6 15" />
-              </svg>
-            </button>
-          )}
+          <Link
+            href={`/${lang}/our-service`}
+            className="inline-flex items-center gap-2 px-8 py-[0.85rem] rounded-[var(--radius-xl)] bg-linear-to-br from-[var(--primary-color)] to-[#5b9bd5] text-white text-[0.95rem] font-semibold no-underline shadow-[0_2px_12px_rgba(55,118,189,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(55,118,189,0.35)]"
+          >
+            {lang === "ar" ? "عرض جميع الخدمات" : "View All Services"}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </Link>
         </motion.div>
-      </Container>
-    </section>
+
+      {/* </Container> */}
+    </Section>
   );
 }

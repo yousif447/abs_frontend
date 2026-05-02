@@ -1,173 +1,130 @@
-"use client";
+import React from 'react';
+import Container from './Container';
+import Section from './Section';
+import { MdOutlineLocationOn, MdOutlinePhone, MdAccessTime } from 'react-icons/md';
+import ContactForm from './ContactForm';
+import { t } from '@/app/i18n/contact';
 
-import Container from "./Container";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import {
-  MdOutlineLocationOn,
-  MdOutlinePhone,
-  MdAccessTime,
-} from "react-icons/md";
-
-export default function ContactUsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-
+export default function ContactUsSection({lang = "en"}) {
+  const contact = t(lang)
   return (
-    <section id="contact" className="contact-section" ref={ref}>
+    <Section className="bg-white" id="contact">
       <Container>
-        <motion.div
-          className="section-header"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="section-label section-label-center">Contact Us</span>
-          <h2 className="section-title section-title-center">
-            Get in
-            <span className="section-title-accent"> Touch</span>
-          </h2>
-          <p className="section-subtitle">
-            Have a question or ready to start your certification journey? Reach out to us
-            and our team will be happy to assist you.
-          </p>
-        </motion.div>
 
-        <div className="contact-grid">
-          {/* Left – Map & Info */}
-          <motion.div
-            className="contact-info-col"
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.15 }}
-          >
-            {/* Map */}
-            <div className="contact-map-wrapper">
+        {/* section-header-center */}
+        <div className="text-center mb-14">
+          {/* section-label */}
+          <span className={`${lang === "ar" ? "font-heading" : "font-display"} inline-block text-[0.8rem] font-bold tracking-[0.08em] uppercase text-[var(--primary-color)] bg-[rgba(55,118,189,0.08)] px-4 py-[0.35rem] rounded-full mb-4`}>
+            {contact.header}
+          </span>
+          {/* section-heading */}
+          <h2 className={`${lang === "ar" ? "font-heading" : "font-display"} text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold text-[#0f172a] leading-[1.2] mb-4`}>
+            {contact.title}
+          </h2>
+          {/* section-subheading */}
+          <p className="text-[#64748b] text-[1.05rem] leading-[1.7] max-w-[620px] mx-auto">
+            {contact.description1}
+          </p>
+        </div>
+
+        {/* contact-grid */}
+        <div className="grid grid-cols-2 gap-12 items-start max-md:grid-cols-1 max-md:gap-8">
+
+          {/* contact-info-col */}
+          <div className="flex flex-col gap-6">
+
+            {/* contact-map-wrapper */}
+            <div className="rounded-[var(--radius-lg)] overflow-hidden border border-[#e2e8f0] shadow-[0_4px_16px_rgba(0,0,0,0.06)]">
               <iframe
-                title="ABS Global Office Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3455.123456789!2d31.2357!3d29.9602!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjnCsDU3JzM2LjciTiAzMcKwMTQnMDguNSJF!5e0!3m2!1sen!2seg!4v1234567890"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3456.0277731200217!2d31.2315896752734!3d29.978631821686424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145847ac1b58b095%3A0xc442d010c8dc8696!2sAbs%20Globals%20(%20Maadi%20Office)!5e0!3m2!1sen!2seg!4v1776595226219!5m2!1sen!2seg"
                 width="100%"
                 height="260"
-                style={{ border: 0, borderRadius: "var(--radius-lg)" }}
+                style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
 
-            {/* Info cards */}
-            <div className="contact-info-cards">
-              <div className="contact-info-card">
-                <div className="contact-info-card-icon">
+            {/* contact-info-cards */}
+            <div className="flex flex-col gap-4">
+
+              {/* contact-info-card */}
+              <div className="flex items-start gap-4 p-5 bg-[#f8fafc] rounded-[var(--radius-md)] border border-[#e2e8f0] transition-all duration-300 hover:border-[var(--primary-color)] hover:bg-[rgba(55,118,189,0.03)]">
+                {/* contact-info-icon */}
+                <div className="flex items-center justify-center w-11 h-11 rounded-[var(--radius-md)] bg-[rgba(55,118,189,0.1)] text-[var(--primary-color)] shrink-0">
                   <MdAccessTime size={22} />
                 </div>
                 <div>
-                  <h4 className="contact-info-card-title">Regular Opening Hours</h4>
-                  <p className="contact-info-card-text">
-                    Saturday to Thursday<br />
-                    8:00 AM – 6:00 PM
+                  <h4 className={`${lang === "ar" ? "font-heading" : "font-display"} font-bold text-[#0f172a] text-[0.95rem] mb-1`}>
+                    {contact.workingHoursTitle}
+                  </h4>
+                  <p className="text-[#64748b] text-[0.875rem] leading-[1.65]">
+                    {contact.workingHoursDays}<br />{contact.workingHoursTime}
                   </p>
                 </div>
               </div>
 
-              <div className="contact-info-card">
-                <div className="contact-info-card-icon">
+              <div className="flex items-start gap-4 p-5 bg-[#f8fafc] rounded-[var(--radius-md)] border border-[#e2e8f0] transition-all duration-300 hover:border-[var(--primary-color)] hover:bg-[rgba(55,118,189,0.03)]">
+                <div className="flex items-center justify-center w-11 h-11 rounded-[var(--radius-md)] bg-[rgba(55,118,189,0.1)] text-[var(--primary-color)] shrink-0">
                   <MdOutlineLocationOn size={22} />
                 </div>
-                <div>
-                  <h4 className="contact-info-card-title">Maadi Branch</h4>
-                  <p className="contact-info-card-text">
-                    3B El Mohandseen Towers, Corniche El Maadi, 18th floor,
-                    Al Isaweyah, Maadi, Cairo Governorate, Egypt
-                  </p>
+                <div className='flex flex-col gap-2'>
+                  <div>
+                    <h4 className={`${lang === "ar" ? "font-heading" : "font-display"} font-bold text-[#0f172a] text-[0.95rem] mb-1`}>
+                      {contact.branchTitle1}
+                    </h4>
+                    <p className="text-[#64748b] text-[0.875rem] leading-[1.65]">
+                      {contact.branchAddress1}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className={`${lang === "ar" ? "font-heading" : "font-display"} font-bold text-[#0f172a] text-[0.95rem] mb-1`}>
+                      {contact.branchTitle2}
+                    </h4>
+                    <p className="text-[#64748b] text-[0.875rem] leading-[1.65]">
+                      {contact.branchAddress2}
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="contact-info-card">
-                <div className="contact-info-card-icon">
+              <div className="flex items-start gap-4 p-5 bg-[#f8fafc] rounded-[var(--radius-md)] border border-[#e2e8f0] transition-all duration-300 hover:border-[var(--primary-color)] hover:bg-[rgba(55,118,189,0.03)]">
+                <div className="flex items-center justify-center w-11 h-11 rounded-[var(--radius-md)] bg-[rgba(55,118,189,0.1)] text-[var(--primary-color)] shrink-0">
                   <MdOutlinePhone size={22} />
                 </div>
                 <div>
-                  <h4 className="contact-info-card-title">Landline</h4>
-                  <p className="contact-info-card-text">
-                    <a href="tel:+20233731792" className="contact-phone-link">
-                      +20 2 3373 1792
+                  <h4 className={`${lang === "ar" ? "font-heading" : "font-display"} font-bold text-[#0f172a] text-[0.95rem] mb-1`}>
+                    {contact.landline}
+                  </h4>
+                  <p className="text-[#64748b] text-[0.875rem] leading-[1.65]">
+                    <a href={`tel:${contact.branchPhone}`}
+                      className="text-[var(--primary-color)] no-underline font-semibold transition-colors duration-200 hover:text-[#1e5a9e]">
+                      {contact.branchPhone}
                     </a>
                   </p>
                 </div>
               </div>
+
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right – Form */}
-          <motion.div
-            className="contact-form-col"
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-              <h3 className="contact-form-title">Send Us a Message</h3>
+          {/* contact-form-col */}
+          <div className="flex flex-col">
+            {/* contact-form-card */}
+            <div className="bg-[#f8fafc] rounded-[var(--radius-lg)] p-10 border border-[#e2e8f0] max-md:p-6">
+              <h3 className={`${lang === "ar" ? "font-heading" : "font-display"} text-[1.35rem] font-bold text-[#0f172a] mb-2`}>
+                {contact.subtitle2}
+              </h3>
+              <p className={`${lang === "ar" ? "font-heading" : "font-display"} text-[#64748b] text-[0.9rem] leading-[1.6] mb-8`}>
+                {contact.description}
+              </p>
+              <ContactForm lang={lang}/>
+            </div>
+          </div>
 
-              <div className="contact-form-group">
-                <label htmlFor="contact-name" className="contact-form-label">
-                  Full Name
-                </label>
-                <input
-                  id="contact-name"
-                  type="text"
-                  placeholder="John Doe"
-                  className="contact-form-input"
-                />
-              </div>
-
-              <div className="contact-form-group">
-                <label htmlFor="contact-email" className="contact-form-label">
-                  Email Address
-                </label>
-                <input
-                  id="contact-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  className="contact-form-input"
-                />
-              </div>
-
-              <div className="contact-form-group">
-                <label htmlFor="contact-mobile" className="contact-form-label">
-                  Mobile Number
-                </label>
-                <input
-                  id="contact-mobile"
-                  type="tel"
-                  placeholder="+20 1XX XXX XXXX"
-                  className="contact-form-input"
-                />
-              </div>
-
-              <div className="contact-form-group">
-                <label htmlFor="contact-message" className="contact-form-label">
-                  Message
-                </label>
-                <textarea
-                  id="contact-message"
-                  rows={5}
-                  placeholder="How can we help you?"
-                  className="contact-form-textarea"
-                />
-              </div>
-
-              <button type="submit" className="contact-form-btn">
-                Send Message
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13" />
-                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                </svg>
-              </button>
-            </form>
-          </motion.div>
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }

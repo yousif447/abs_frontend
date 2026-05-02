@@ -1,168 +1,85 @@
 "use client";
+import Link from 'next/link';
+import Image from 'next/image';
+import Container from './Container';
+import Section from './Section';
+import CountUpStats from './CountUpStats';
+import { motion } from 'framer-motion';
 
-import Container from "./Container";
-import Link from "next/link";
-import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
-
-/* ── Dummy partner logos (text-based placeholders styled as logo cards) ── */
-const partners = [
-  { id: 1, name: "Orascom Construction", initials: "OC" },
-  { id: 2, name: "ElSewedy Electric", initials: "SE" },
-  { id: 3, name: "Talaat Moustafa Group", initials: "TM" },
-  { id: 4, name: "Juhayna Food Industries", initials: "JF" },
-  { id: 5, name: "Eastern Company", initials: "EC" },
-  { id: 6, name: "Palm Hills Developments", initials: "PH" },
-  { id: 7, name: "Americana Group", initials: "AG" },
-  { id: 8, name: "Arabian Cement Company", initials: "AC" },
-  { id: 9, name: "Emaar Misr", initials: "EM" },
-  { id: 10, name: "Hassan Allam Holding", initials: "HA" },
-  { id: 11, name: "Ezz Steel", initials: "EZ" },
-  { id: 12, name: "Vodafone Egypt", initials: "VE" },
-];
-
-const stats = [
-  { label: "Customer Satisfaction", value: 1548, suffix: "+" },
-  { label: "Daily Data Input", value: 25, suffix: "+" },
-  { label: "Years Experience", value: 9, suffix: "+" },
-];
-
-/* ── Count-up hook ── */
-function useCountUp(target, isInView, duration = 2000) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!isInView) return;
-
-    let start = 0;
-    const startTime = performance.now();
-
-    function step(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // Ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(eased * target);
-
-      setCount(current);
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      }
-    }
-
-    requestAnimationFrame(step);
-  }, [isInView, target, duration]);
-
-  return count;
-}
-
-function StatCard({ label, value, suffix, isInView, delay }) {
-  const count = useCountUp(value, isInView);
-
+export default function OurPartnersSection({data, lang = "en"}) {
+  const partnerSection = data.sections.find((item) => item.type === "Partners");
   return (
-    <motion.div
-      className="partner-stat-card"
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay }}
-    >
-      <span className="partner-stat-number">
-        {count}
-        <span className="partner-stat-suffix">{suffix}</span>
-      </span>
-      <span className="partner-stat-label">{label}</span>
-    </motion.div>
-  );
-}
+    <Section className="relative overflow-hidden" id="partners">
+      {/* Background orbs */}
+      <div className="absolute top-[-80px] right-[-60px] w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,rgba(55,118,189,0.07)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute bottom-[-60px] left-[-40px] w-[250px] h-[250px] rounded-full bg-[radial-gradient(circle,rgba(223,6,34,0.04)_0%,transparent_70%)] pointer-events-none" />
 
-export default function OurPartnersSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  const [showAll, setShowAll] = useState(false);
-
-  const displayed = showAll ? partners : partners.slice(0, 8);
-
-  return (
-    <section id="partners" className="partners-section" ref={ref}>
       <Container>
-        {/* Header */}
+        {/* Section Header */}
         <motion.div
-          className="section-header"
+          className="text-center mb-14"
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
         >
-          <span className="section-label section-label-center">Our Partners</span>
-          <h2 className="section-title section-title-center">
-            Trusted by
-            <span className="section-title-accent"> Industry Leaders</span>
+          <span className={`${lang === "ar" ? "font-heading" : "font-display" }inline-block text-[0.8rem] font-bold tracking-[0.08em] uppercase text-[var(--primary-color)] bg-[rgba(55,118,189,0.08)] px-4 py-[0.35rem] rounded-full mb-4`}>
+            {lang === "ar" ? "شركاؤنا" : "Our Partners"}
+          </span>
+          <h2 className={`${lang === "ar" ? "font-heading" : "font-display" } mt-10 text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold text-[#0f172a] leading-[1.2] mb-4`}>
+            <span className="text-[var(--primary-color)]">{partnerSection.header_title}</span>
           </h2>
-          <p className="section-subtitle">
-            We are proud to have partnered with leading organizations across
-            diverse industries, helping them achieve and maintain international standards.
+          <p className="text-[#64748b] text-[1.05rem] leading-[1.7] max-w-[620px] mx-auto">
+            {partnerSection.header_description}
           </p>
         </motion.div>
 
-        {/* Stats */}
-        <div className="partners-stats-row">
-          {stats.map((stat, i) => (
-            <StatCard
-              key={stat.label}
-              label={stat.label}
-              value={stat.value}
-              suffix={stat.suffix}
-              isInView={isInView}
-              delay={0.2 + i * 0.15}
-            />
-          ))}
+        <CountUpStats lang={lang} />
+
+        {/* Partners Grid */}
+        {/* Partners Marquee */}
+        <div className="partners-marquee-wrapper">
+          <div className="partners-marquee-track">
+            {[...partnerSection.content.items, ...partnerSection.content.items].map((partner, index) => (
+              <a href={partner.url} target="_blank" key={index} className="partners-marquee-item">
+                <img
+                  src="/marwa.png"
+                  alt={partner.name}
+                  width={120}
+                  height={60}
+                  className="object-contain"
+                  />
+                  {/* <Image
+                    src={partner.image}
+                    alt={partner.name}
+                    width={64}
+                    height={64}
+                    className="object-contain transition-transform duration-500 group-hover:scale-110"
+                  /> */}
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* Partners grid */}
-        <div className="partners-grid">
-          {displayed.map((partner, i) => (
-            <motion.div
-              key={partner.id}
-              className="partner-card"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
-            >
-              <div className="partner-card-logo">{partner.initials}</div>
-              <span className="partner-card-name">{partner.name}</span>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* View all */}
+        {/* CTA */}
         <motion.div
-          className="services-cta"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          className="text-center mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {!showAll ? (
-            <button
-              className="services-view-more-btn"
-              onClick={() => setShowAll(true)}
-            >
-              View All Clients
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-          ) : (
-            <button
-              className="services-view-more-btn"
-              onClick={() => setShowAll(false)}
-            >
-              Show Less
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="18 15 12 9 6 15" />
-              </svg>
-            </button>
-          )}
+          <Link
+            href={`/${lang}/our-partners`}
+            className="inline-flex items-center gap-2 px-8 py-[0.85rem] rounded-[var(--radius-xl)] bg-transparent text-[var(--primary-color)] border-2 border-[var(--primary-color)] text-[0.95rem] font-semibold no-underline transition-all duration-300 hover:bg-[var(--primary-color)] hover:text-white hover:shadow-[0_6px_24px_rgba(55,118,189,0.3)] hover:-translate-y-0.5"
+          >
+            {lang === "ar" ? "عرض جميع العملاء" : "View All Clients"}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </Link>
         </motion.div>
       </Container>
-    </section>
+    </Section>
   );
 }

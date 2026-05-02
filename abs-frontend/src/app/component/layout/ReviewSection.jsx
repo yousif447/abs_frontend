@@ -1,128 +1,117 @@
 "use client";
 
-import Container from "./Container";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { FaStar, FaStarHalfAlt, FaRegStar, FaQuoteLeft } from "react-icons/fa";
+import React from 'react';
+import Container from './Container';
+import Section from './Section';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
-const reviews = [
-  {
-    id: 1,
-    name: "Ahmed El-Sayed",
-    role: "Operations Director, Orascom",
-    comment:
-      "ABS Global made our ISO 9001 certification journey seamless. Their expertise and hands-on approach helped us achieve compliance in record time. Highly recommended!",
-    stars: 5,
-    avatar: "AE",
-  },
-  {
-    id: 2,
-    name: "Sara Mohamed",
-    role: "Quality Manager, Juhayna",
-    comment:
-      "Professional, knowledgeable, and responsive. The team at ABS Global exceeded our expectations with their thorough audit and consulting services for ISO 22000.",
-    stars: 5,
-    avatar: "SM",
-  },
-  {
-    id: 3,
-    name: "Khaled Hassan",
-    role: "CEO, TechNile Solutions",
-    comment:
-      "We partnered with ABS Global for our ISO 27001 certification. Their structured methodology and deep understanding of information security made the entire process smooth and efficient.",
-    stars: 4.5,
-    avatar: "KH",
-  },
-  {
-    id: 4,
-    name: "Fatima Al-Rashid",
-    role: "HSE Manager, Arabian Cement",
-    comment:
-      "Outstanding service! ABS Global's consultants were incredibly thorough in helping us implement ISO 45001. Our workplace safety has improved dramatically since certification.",
-    stars: 5,
-    avatar: "FA",
-  },
-  {
-    id: 5,
-    name: "Mohamed Youssef",
-    role: "Plant Manager, ElSewedy",
-    comment:
-      "ABS Global delivered on every promise. Their ISO 14001 consulting was comprehensive and practical. Our environmental management system is now a competitive advantage.",
-    stars: 4.5,
-    avatar: "MY",
-  },
-  {
-    id: 6,
-    name: "Nadia Ibrahim",
-    role: "IT Director, Palm Hills",
-    comment:
-      "From gap analysis to final audit, ABS Global provided exceptional support. Their team is genuinely invested in their clients' success. Will definitely work with them again.",
-    stars: 5,
-    avatar: "NI",
-  },
-];
+const cardVariants = {
+  hidden: { opacity: 0, y: 35, scale: 0.96 },
+  visible: { opacity: 1, y: 0, scale: 1 },
+};
 
-function StarRating({ rating }) {
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    if (i <= Math.floor(rating)) {
-      stars.push(<FaStar key={i} className="review-star filled" />);
-    } else if (i === Math.ceil(rating) && rating % 1 !== 0) {
-      stars.push(<FaStarHalfAlt key={i} className="review-star filled" />);
-    } else {
-      stars.push(<FaRegStar key={i} className="review-star empty" />);
-    }
-  }
-  return <div className="review-stars">{stars}</div>;
+function StarRating({ count = 0 }) {
+  return (
+    <div className="flex mt-2">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <svg
+          key={i}
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill={i < count ? '#f59e0b' : '#e5e7eb'}
+        >
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+      ))}
+    </div>
+  );
 }
 
-export default function ReviewSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+export default function ReviewSection({ data, lang = "en" }) {
+  const reviewSection = data?.sections?.find(
+    (section) => section.type.trim().toLowerCase() === "reviews"
+  );
+
+  if (!reviewSection) return null;
 
   return (
-    <section id="reviews" className="review-section" ref={ref}>
-      <Container>
+    <div
+      id="reviews"
+      className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8"
+    > 
+        {/* Header */}
         <motion.div
-          className="section-header"
+          className="text-center mb-16 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          <span className="section-label section-label-center">Testimonials</span>
-          <h2 className="section-title section-title-center">
-            What Our Clients
-            <span className="section-title-accent"> Say About Us</span>
+          <span className={`${lang === "ar" ? "font-heading" : "font-display" }inline-block text-[0.8rem] font-bold tracking-[0.08em] uppercase text-[var(--primary-color)] bg-[rgba(55,118,189,0.08)] px-4 py-[0.35rem] rounded-full mb-4`}>
+            {lang === "ar" ? "آراء العملاء" : "Testimonials"}
+          </span>
+
+          <h2 className={`${lang === "ar" ? "font-heading" : "font-display" } mt-10 text-3xl md:text-4xl font-bold text-slate-900 mb-4`}>
+            {reviewSection.header_title}
           </h2>
-          <p className="section-subtitle">
-            Hear from the organizations we have helped achieve international certification
-            and operational excellence.
+
+          <p className="text-slate-500 text-lg">
+            {reviewSection.header_description}
           </p>
         </motion.div>
 
-        <div className="reviews-grid">
-          {reviews.map((review, i) => (
+        {/* Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {reviewSection.content.items.map((review, index) => (
             <motion.div
               key={review.id}
-              className="review-card"
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              className="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.12,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
             >
-              <FaQuoteLeft className="review-quote-icon" />
-              <p className="review-comment">{review.comment}</p>
-              <StarRating rating={review.stars} />
-              <div className="review-author">
-                <div className="review-avatar">{review.avatar}</div>
-                <div className="review-author-info">
-                  <span className="review-author-name">{review.name}</span>
-                  <span className="review-author-role">{review.role}</span>
+              {/* Quote */}
+              <div className="text-primary opacity-20 mb-3">
+                <svg width="30" height="30" fill="currentColor">
+                  <path d="M7 17h3l2-4V7H6v6h3l-2 4zm10 0h3l2-4V7h-6v6h3l-2 4z"/>
+                </svg>
+              </div>
+
+
+              {/* Stars */}
+              <StarRating count={review.rating} />
+
+              {/* Text */}
+              <p className="text-slate-600 text-sm leading-relaxed mt-4 mb-6">
+                {review.review}
+              </p>
+
+              {/* User */}
+              <div className="pt-4 border-t">
+                <div className="flex items-center gap-3">
+                  <img src="/user.png" alt="user image" width={35} height={35} />
+                  {/* <Image src={review.image} alt="user image" width={35} height={35} /> */}
+                  <div>
+                    <p className="font-semibold text-slate-900 text-sm">
+                      {review.name}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {review.job_title} • {review.company}
+                    </p>
+                  </div>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
-      </Container>
-    </section>
+    </div>
   );
 }
